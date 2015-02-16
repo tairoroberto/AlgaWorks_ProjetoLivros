@@ -2,7 +2,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets">
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>Insert title here</title>
@@ -18,20 +19,42 @@
 			<label style="color: white;">Descrição do livro </label> <h:inputText value="#{catalogoLivrosBean.livro.description}"/><br/>
 			<h:commandButton value="Inserir livro" action="#{catalogoLivrosBean.incluirLivro}"/>
 		</div>
+		<br/>
+		<h:commandLink action="#{catalogoLivrosBean.obterAjuda}" value="Ajuda sobre esta TELA">
+			<f:actionListener type="br.com.tairoroberto.projetolivros.RegistroCliqueBotaoListener"/>
+		</h:commandLink>
+	</h:form>
+	<br/>
+	
+	<h:form>	
+		<div style="background-color: black;;">
+			<br/>
+				<br/><br/>
+			<label style="color: white;">Pesquisa de livro: </label><h:inputText value="#{catalogoLivrosBean.livroPesquisa}"
+				valueChangeListener="#{catalogoLivrosBean.livroPesquisaAlterado}"
+				onchange="submit()" />
+				<br/><br/>
+		</div>	
 	</h:form>
 	
-	<ol>
-		<ui:repeat var="item" value="#{catalogoLivrosBean.livros}">
+	<h:form>
+		<ol>
+		<ui:repeat var="item" value="#{catalogoLivrosBean.livrosFiltrados}">
 			<li>
 				<div style="background-color: olive;">
 					<label style="color: white;">Título: </label>#{item.title}<br/>
 					<label style="color: white;">Autor: </label>#{item.author}<br/>
 					<label style="color: white;">Descrição: </label>#{item.description}<br/>
+					<h:commandButton value="Excluir livro" action="#{catalogoLivrosBean.excluir}">
+					<f:setPropertyActionListener value="#{item}" target="#{catalogoLivrosBean.livroSelecionado}"></f:setPropertyActionListener>
+					</h:commandButton>
 				</div>
 				<br/>
 			</li>
 		</ui:repeat>
 	</ol>
+	</h:form>
+
 
 </body>
 </html>
