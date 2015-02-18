@@ -11,6 +11,8 @@ public class Livro implements Serializable{
 	private String title;
 	private String author;
 	private String description;
+	private String genere;
+	private boolean complete;
 	
 	public String getTitle() {
 		return title;
@@ -30,6 +32,19 @@ public class Livro implements Serializable{
 	public void setDescription(String description) {
 		this.description = description;
 	}
+	public String getGenere() {
+		return genere;
+	}
+	public void setGenere(String genere) {
+		this.genere = genere;
+	}
+	public boolean isComplete() {
+		return complete;
+	}
+	public void setComplete(boolean complete) {
+		this.complete = complete;
+	}
+	
 	
 	
 }

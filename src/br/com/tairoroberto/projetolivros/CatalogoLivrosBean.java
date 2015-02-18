@@ -4,8 +4,11 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.faces.application.FacesMessage;
+import javax.faces.application.FacesMessage.Severity;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
 import javax.faces.event.ValueChangeEvent;
 
 import br.com.tairoroberto.domain.Livro;
@@ -29,15 +32,49 @@ public class CatalogoLivrosBean  implements Serializable{
 		this.livro = new Livro();
 	}
 	
+	//method to save book
 	public void incluirLivro() {
-		this.livros.add(this.livro);
-		this.livro = new Livro();
-		atualizaListaLivros(null);
+		if (this.livro.getTitle() == null || this.livro.getTitle().length() < 3) {
+			this.adicionarMessagem("formLivros:title", FacesMessage.SEVERITY_ERROR, 
+					"Título incompleto", "Por favor informar o título completo do livro.");
+		}
+		if (this.livro.getAuthor() == null || this.livro.getAuthor().length() < 3) {
+			this.adicionarMessagem("formLivros:title", FacesMessage.SEVERITY_ERROR, 
+					"Nome do Autor incompleto", "Por favor informar o nome do autor.");
+		}
+		if (this.livro.getTitle() == null || this.livro.getTitle().length() < 3) {
+			this.adicionarMessagem("formLivros:title", FacesMessage.SEVERITY_ERROR, 
+					"Descrição inválida", "Por favor informar uma descrição para o livro.");
+		}
+		
+		FacesContext context = FacesContext.getCurrentInstance();
+		if (!context.getMessages().hasNext()) {
+			//Aqui poderia gravar o livro no banco de dados
+			this.livros.add(this.livro);
+			this.livro = new Livro();
+			atualizaListaLivros(null);
+			
+			this.adicionarMessagem(null, FacesMessage.SEVERITY_INFO, 
+					"Livro cadastrado", "Livro cadastrado com sucesso...!");
+		}
+		
+		
+	}
+	
+	//method to generate a message
+	private void adicionarMessagem(String clienteId, Severity severity, String sumary, String detail){
+		FacesContext context = FacesContext.getCurrentInstance();
+		FacesMessage message = new FacesMessage(severity, sumary, detail);
+		
+		//add message to queue
+		context.addMessage(clienteId, message);
 	}
 	
 	//methid to delete book
 	public void excluir() {
 		this.livros.remove(this.livroSelecionado);
+		this.adicionarMessagem(null, FacesMessage.SEVERITY_INFO, 
+				"Livro deletado", "Livro deletado com sucesso...!");
 		 atualizaListaLivros(null);
 	}
 		

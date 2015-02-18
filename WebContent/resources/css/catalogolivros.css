@@ -1,0 +1,20 @@
+@CHARSET "UTF-8";
+
+.cadastro{
+	background-color: black;
+	color: white;
+}
+.data-table-livros{
+	font-family: Arial;
+	font-size: 12px;
+}
+.data-table-header{
+	background-color: black;
+	color: white;
+}
+.linha1{
+	background-color: #c9c9c9;
+}
+.linha2{
+	background-color: white;
+}

@@ -4,57 +4,122 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:f="http://java.sun.com/jsf/core">
-<head>
+<h:head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>Insert title here</title>
-</head>
-<body>
+<title>Catalogo de livros</title>
 
-	<h1 align="center">CAtalógo de livros que tenho</h1>
-	<h:form>		
-		<div style="background-color: black;;">
-		<br/>
-			<label style="color: white;">Nome do livro </label> <h:inputText value="#{catalogoLivrosBean.livro.title}"/><br/>
-			<label style="color: white;">Autor do livro </label> <h:inputText value="#{catalogoLivrosBean.livro.author}"/><br/>
-			<label style="color: white;">Descrição do livro </label> <h:inputText value="#{catalogoLivrosBean.livro.description}"/><br/>
+	<h:outputStylesheet library="css" name="catalogolivros.css"/>
+</h:head>
+<h:body>
+
+	<h1 align="center">Catalógo de livros que tenho</h1>
+	<h:form id="formLivros">	
+		
+		<h:messages layout="list" errorStyle="color:red" 
+			infoStyle="color:green" warnStyle="color:orange"
+			fatalStyle="color:#c0c0c0" showDetail="true" showSummary="false" globalOnly="true"/>
+				
+		<div class="cadastro">
+		<h:panelGrid columns="2">
+			<h:outputLabel value="Nome do livro" for="title"/> 
+			<h:panelGroup>
+				<h:inputText value="#{catalogoLivrosBean.livro.title}" id="title"/>
+				<h:message for="title" infoStyle="color:green" errorStyle="color:red" 
+					warnStyle="color:orange" />
+			</h:panelGroup>
+			
+			<h:outputLabel value="Autor do livro" for="author"/> 
+			<h:panelGroup>
+				<h:inputText value="#{catalogoLivrosBean.livro.author}" id="author"/>
+				<h:message for="author" infoStyle="color:green" errorStyle="color:red" 
+					warnStyle="color:orange"/>
+			</h:panelGroup>			
+			
+			<h:outputLabel value="Descrição do livro" for="description"/> 
+			<h:panelGroup>
+				<h:inputText value="#{catalogoLivrosBean.livro.description}" id="description"/>
+				<h:message for="descrption" infoStyle="color:green" errorStyle="color:red" 
+					warnStyle="color:orange"/>	
+			</h:panelGroup>
+						
+			<h:outputLabel value="Gênero do livro" for="genere"/> 
+			<h:selectOneMenu id="genere" value="#{catalogoLivrosBean.livro.genere}">
+				<f:selectItem itemValue="Ação"/>
+				<f:selectItem itemValue="Ficção"/>
+				<f:selectItem itemValue="Suspense" />
+				<f:selectItem itemValue="Romance"/>
+				<f:selectItem itemValue="Tecnologia"/>
+			</h:selectOneMenu>
+			
+			<h:outputLabel value="Completo" for="complete"/> 
+			<h:panelGroup>
+				<h:selectBooleanCheckbox value="#{catalogoLivrosBean.livro.complete}" id="complete"/>	
+			</h:panelGroup>
+			
+			<h:outputLabel/> 
 			<h:commandButton value="Inserir livro" action="#{catalogoLivrosBean.incluirLivro}"/>
+		</h:panelGrid>			
 		</div>
-		<br/>
+		
+		
 		<h:commandLink action="#{catalogoLivrosBean.obterAjuda}" value="Ajuda sobre esta TELA">
 			<f:actionListener type="br.com.tairoroberto.projetolivros.RegistroCliqueBotaoListener"/>
 		</h:commandLink>
 	</h:form>
 	<br/>
 	
-	<h:form>	
-		<div style="background-color: black;;">
-			<br/>
-				<br/><br/>
-			<label style="color: white;">Pesquisa de livro: </label><h:inputText value="#{catalogoLivrosBean.livroPesquisa}"
+	<h:form>
+		<div class="cadastro">
+			<h:panelGrid columns="2">
+			<h:outputLabel value="Pesquisa de livro"/>
+			<h:inputText value="#{catalogoLivrosBean.livroPesquisa}"
 				valueChangeListener="#{catalogoLivrosBean.livroPesquisaAlterado}"
 				onchange="submit()" />
-				<br/><br/>
-		</div>	
+		</h:panelGrid>
+		</div>
 	</h:form>
 	
 	<h:form>
-		<ol>
-		<ui:repeat var="item" value="#{catalogoLivrosBean.livrosFiltrados}">
-			<li>
-				<div style="background-color: olive;">
-					<label style="color: white;">Título: </label>#{item.title}<br/>
-					<label style="color: white;">Autor: </label>#{item.author}<br/>
-					<label style="color: white;">Descrição: </label>#{item.description}<br/>
-					<h:commandButton value="Excluir livro" action="#{catalogoLivrosBean.excluir}">
+		<h:dataTable value="#{catalogoLivrosBean.livrosFiltrados}" var="item"
+			rendered="#{not empty catalogoLivrosBean.livrosFiltrados}" 
+			styleClass="tabela" headerClass="cabecalho" rowClasses="linha1,linha2">
+			
+			<h:column>
+				<f:facet name="header">Título</f:facet>
+				<h:outputLink value="http://www.google.com?q=#{item.title}">
+					<h:outputLabel value="#{item.title}"/>
+				</h:outputLink>
+			</h:column>
+			
+			<h:column>
+				<f:facet name="header">Autor</f:facet>
+				<h:outputLabel value="#{item.author}"/>
+			</h:column>
+			
+			<h:column>
+				<f:facet name="header">Descrição</f:facet>
+				<h:outputLabel value="#{item.description}"/>
+			</h:column>
+			
+			<h:column>
+				<f:facet name="header">Gênero</f:facet>
+				<h:outputLabel value="#{item.genere}"/>
+			</h:column>
+			
+			<h:column>
+				<f:facet name="header">Completo</f:facet>
+				<h:outputLabel value="#{item.genere ? 'sim' : 'não' }"/>
+			</h:column>
+			
+			<h:column>
+				<h:commandButton value="Excluir livro" action="#{catalogoLivrosBean.excluir}">
 					<f:setPropertyActionListener value="#{item}" target="#{catalogoLivrosBean.livroSelecionado}"></f:setPropertyActionListener>
-					</h:commandButton>
-				</div>
-				<br/>
-			</li>
-		</ui:repeat>
-	</ol>
+				</h:commandButton>
+			</h:column>
+			
+		</h:dataTable>
 	</h:form>
 
 
-</body>
+</h:body>
 </html>
